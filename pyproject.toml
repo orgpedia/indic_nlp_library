@@ -1,10 +1,12 @@
 [tool.poetry]
-name = "indic-nlp-library"
+name = "indic_nlp_library"
 version = "0.92.1"
 description = "The goal of the Indic NLP Library is to build Python based libraries for common text processing and Natural Language Processing in Indian languages."
 authors = ["Anoop Kunchukuttan <anoop.kunchukuttan@gmail.com>"]
 license = "MIT"
 readme = "README.md"
+
+packages = [{include = "indicnlp"}]
 
 classifiers=[
     "Programming Language :: Python :: 3",
