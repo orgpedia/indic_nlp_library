@@ -17,7 +17,6 @@ classifiers=[
 python = "^3.5"
 Morfessor = "^2.0.6"
 
-
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
