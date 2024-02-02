@@ -14,7 +14,7 @@ classifiers=[
 
 
 [tool.poetry.dependencies]
-python = "3.5"
+python = "^3.5"
 Morfessor = "^2.0.6"
 numpy = "^1.26.3"
 
