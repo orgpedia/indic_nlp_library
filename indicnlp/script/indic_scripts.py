@@ -8,7 +8,6 @@
 
 import csv
 import os
-import numpy as np
 
 from indicnlp import common
 from indicnlp.common import IndicNlpException
@@ -207,7 +206,8 @@ def get_phonetic_info(lang):
 
 def invalid_vector():
     ##  TODO: check if np datatype is correct?
-    return np.array([0] * PHONETIC_VECTOR_LENGTH)
+    #return np.array([0] * PHONETIC_VECTOR_LENGTH)
+    return [0] * PHONETIC_VECTOR_LENGTH
 
 
 def get_phonetic_feature_vector(c, lang):
@@ -238,7 +238,7 @@ def get_phonetic_feature_vector_offset(offset, lang):
 
 ### Unary operations on vectors
 def is_valid(v):
-    return np.sum(v) > 0
+    return sum(v) > 0
 
 
 def is_vowel(v):
@@ -277,11 +277,11 @@ def is_plosive(v):
 
 
 def or_vectors(v1, v2):
-    return np.array([1 if (b1 + b2) >= 1 else 0 for b1, b2 in zip(v1, v2)])
+    return [1 if (b1 + b2) >= 1 else 0 for b1, b2 in zip(v1, v2)]
 
 
 def xor_vectors(v1, v2):
-    return np.array([1 if b1 != b2 else 0 for b1, b2 in zip(v1, v2)])
+    return [1 if b1 != b2 else 0 for b1, b2 in zip(v1, v2)]
 
 
 ### Getting properties from phonetic vectors
@@ -313,6 +313,7 @@ def lcsr_indic(srcw, tgtw, slang, tlang):
     slang: source language
     tlang: target language
     """
+    import numpy as np
     score_mat = np.zeros((len(srcw) + 1, len(tgtw) + 1))
 
     for si, sc in enumerate(srcw, 1):
