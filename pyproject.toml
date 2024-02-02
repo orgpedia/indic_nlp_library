@@ -5,7 +5,7 @@ description = "The goal of the Indic NLP Library is to build Python based librar
 authors = ["Anoop Kunchukuttan <anoop.kunchukuttan@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "indic_nlp_library"}]
+
 classifiers=[
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
