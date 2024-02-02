@@ -20,7 +20,8 @@ from indicnlp.script import indic_scripts as isc
 from indicnlp.transliterate.sinhala_transliterator import (
     SinhalaDevanagariTransliterator as sdt,
 )
-import pandas as pd
+#import pandas as pd
+import csv
 
 OFFSET_TO_ITRANS = {}
 ITRANS_TO_OFFSET = defaultdict(list)
@@ -49,13 +50,24 @@ def init():
     itrans_map_fname = os.path.join(
         common.get_resources_path(), "transliterate", "offset_itrans_map.csv"
     )
-    itrans_df = pd.read_csv(itrans_map_fname, encoding="utf-8")
+    #itrans_df = pd.read_csv(itrans_map_fname, encoding="utf-8")
+
+    itrans_df = []
+    with open(itrans_map_fname, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+        for row in reader:
+            itrans_df.append(row)
+    
 
     global OFFSET_TO_ITRANS, ITRANS_TO_OFFSET, DUPLICATE_ITRANS_REPRESENTATIONS
 
+    ITRANS_IDX = 2
+    OFFSET_HEX_IDX = 0
+
     for r in itrans_df.iterrows():
-        itrans = r[1]["itrans"]
-        o = int(r[1]["offset_hex"], base=16)
+        itrans = r[1][ITRANS_IDX]
+        o = int(r[1][OFFSET_HEX_IDX], base=16)
 
         OFFSET_TO_ITRANS[o] = itrans
 

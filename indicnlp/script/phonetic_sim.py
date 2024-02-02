@@ -11,7 +11,6 @@ from indicnlp import langinfo
 from indicnlp.script.indic_scripts import *
 import numpy as np
 import gzip
-import pandas as pd
 import sys
 
 

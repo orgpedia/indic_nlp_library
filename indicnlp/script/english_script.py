@@ -7,8 +7,7 @@
 #
 
 import os
-import pandas as pd
-import numpy as np
+import csv
 
 from indicnlp import common
 
@@ -98,18 +97,29 @@ def init():
 
     global ENGLISH_PHONETIC_DATA, ENGLISH_PHONETIC_VECTORS, PHONETIC_VECTOR_LENGTH, PHONETIC_VECTOR_START_OFFSET
 
-    ENGLISH_PHONETIC_DATA = pd.read_csv(
-        os.path.join(
-            common.get_resources_path(), "script", "english_script_phonetic_data.csv"
-        ),
-        encoding="utf-8",
-    )
+    # ENGLISH_PHONETIC_DATA = pd.read_csv(
+    #     os.path.join(
+    #         common.get_resources_path(), "script", "english_script_phonetic_data.csv"
+    #     ),
+    #     encoding="utf-8",
+    # )
 
-    ENGLISH_PHONETIC_VECTORS = ENGLISH_PHONETIC_DATA.iloc[
-        :, PHONETIC_VECTOR_START_OFFSET:
-    ].values
+    # ENGLISH_PHONETIC_VECTORS = ENGLISH_PHONETIC_DATA.iloc[
+    #     :, PHONETIC_VECTOR_START_OFFSET:
+    # ].values
 
-    PHONETIC_VECTOR_LENGTH = ENGLISH_PHONETIC_VECTORS.shape[1]
+    # PHONETIC_VECTOR_LENGTH = ENGLISH_PHONETIC_VECTORS.shape[1]
+
+
+    csv_file_path = os.path.join(common.get_resources_path(), "script", "english_script_phonetic_data.csv")
+    with open(csv_file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+        for row in reader:
+            ENGLISH_PHONETIC_DATA.append(row)
+            ENGLISH_PHONETIC_VECTORS.append([int(cell) for cell in row[PHONETIC_VECTOR_START_OFFSET:]])
+
+    PHONETIC_VECTOR_LENGTH = len(ENGLISH_PHONETIC_VECTORS[0])
 
     ### Load mapping from ARPABET representation of phoneme to internal ID
     global ARPABET_ID_MAP, ID_ARPABET_MAP
@@ -155,8 +165,8 @@ def get_phonetic_info(lang):
 
 def invalid_vector():
     ##  TODO: check if np datatype is correct?
-    return np.array([0] * PHONETIC_VECTOR_LENGTH)
-
+    # return np.array([0] * PHONETIC_VECTOR_LENGTH)
+    return [0] * PHONETIC_VECTOR_LENGTH
 
 def get_phonetic_feature_vector(p, lang):
     offset = enc_to_offset(p)
@@ -166,7 +176,8 @@ def get_phonetic_feature_vector(p, lang):
 
     phonetic_data, phonetic_vectors = get_phonetic_info(lang)
 
-    if phonetic_data.iloc[offset]["Valid Vector Representation"] == 0:
+    #if phonetic_data.iloc[offset]["Valid Vector Representation"] == 0:
+    if phonetic_data[offset][5] == 0:
         return invalid_vector()
 
     return phonetic_vectors[offset]

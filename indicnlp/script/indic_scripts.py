@@ -6,9 +6,9 @@
 #  LICENSE file in the root directory of this source tree.
 #
 
-import pandas as pd
-import numpy as np
+import csv
 import os
+import numpy as np
 
 from indicnlp import common
 from indicnlp.common import IndicNlpException
@@ -102,27 +102,46 @@ def init():
 
     global ALL_PHONETIC_DATA, ALL_PHONETIC_VECTORS, TAMIL_PHONETIC_DATA, TAMIL_PHONETIC_VECTORS, PHONETIC_VECTOR_LENGTH, PHONETIC_VECTOR_START_OFFSET
 
-    ALL_PHONETIC_DATA = pd.read_csv(
-        os.path.join(
-            common.get_resources_path(), "script", "all_script_phonetic_data.csv"
-        ),
-        encoding="utf-8",
-    )
-    TAMIL_PHONETIC_DATA = pd.read_csv(
-        os.path.join(
-            common.get_resources_path(), "script", "tamil_script_phonetic_data.csv"
-        ),
-        encoding="utf-8",
-    )
+    # ALL_PHONETIC_DATA = pd.read_csv(
+    #     os.path.join(
+    #         common.get_resources_path(), "script", "all_script_phonetic_data.csv"
+    #     ),
+    #     encoding="utf-8",
+    # )
+    # TAMIL_PHONETIC_DATA = pd.read_csv(
+    #     os.path.join(
+    #         common.get_resources_path(), "script", "tamil_script_phonetic_data.csv"
+    #     ),
+    #     encoding="utf-8",
+    # )
 
-    ALL_PHONETIC_VECTORS = ALL_PHONETIC_DATA.iloc[
-        :, PHONETIC_VECTOR_START_OFFSET:
-    ].values
-    TAMIL_PHONETIC_VECTORS = TAMIL_PHONETIC_DATA.iloc[
-        :, PHONETIC_VECTOR_START_OFFSET:
-    ].values
+    # ALL_PHONETIC_VECTORS = ALL_PHONETIC_DATA.iloc[
+    #     :, PHONETIC_VECTOR_START_OFFSET:
+    # ].values
+    # TAMIL_PHONETIC_VECTORS = TAMIL_PHONETIC_DATA.iloc[
+    #     :, PHONETIC_VECTOR_START_OFFSET:
+    # ].values
 
-    PHONETIC_VECTOR_LENGTH = ALL_PHONETIC_VECTORS.shape[1]
+    # PHONETIC_VECTOR_LENGTH = ALL_PHONETIC_VECTORS.shape[1]
+
+
+    csv_file_path = os.path.join(common.get_resources_path(), "script", "all_script_phonetic_data.csv")
+    with open(csv_file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+        for row in reader:
+            ALL_PHONETIC_DATA.append(row)
+            ALL_PHONETIC_VECTORS.append([int(cell) for cell in row[PHONETIC_VECTOR_START_OFFSET:]])
+
+    csv_file_path = os.path.join(common.get_resources_path(), "script", "tamil_script_phonetic_data.csv")
+    with open(csv_file_path, mode='r', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader)  # Skip the header
+        for row in reader:
+            TAMIL_PHONETIC_DATA.append(row)
+            TAMIL_PHONETIC_VECTORS.append([int(cell) for cell in row[PHONETIC_VECTOR_START_OFFSET:]])
+
+    PHONETIC_VECTOR_LENGTH = len(ALL_PHONETIC_VECTORS[0])
 
 
 def is_supported_language(lang):
